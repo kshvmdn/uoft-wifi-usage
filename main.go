@@ -89,6 +89,7 @@ func main() {
 		var filteredIds []string
 
 		for _, requestedId := range strings.Split(*buildingPtr, ",") {
+			requestedId = strings.Trim(requestedId, " ")
 			if contains(buildingIds, requestedId) {
 				filteredIds = append(filteredIds, requestedId)
 			} else if *verbosePtr {
