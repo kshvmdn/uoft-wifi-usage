@@ -14,6 +14,7 @@ import (
 const baseUrl string = "http://maps.wireless.utoronto.ca/stg"
 
 type building struct {
+	id                    string
 	name                  string
 	connectionCount       int
 	accessPointsUsed      int
@@ -45,7 +46,7 @@ func scrapeWifiUsage(id string) building {
 	}
 
 	name := doc.Find("font[size=\"5\"]").Text()
-	b := building{name: name}
+	b := building{id: id, name: name}
 
 	doc.Find("bq").Each(func(i int, s *goquery.Selection) {
 		intVal, err := strconv.Atoi(s.Text())
@@ -80,6 +81,7 @@ func main() {
 	verbosePtr := flag.Bool("verbose", false, "Show detailed output")
 	flag.Parse()
 
+	var wg sync.WaitGroup
 	var buildings []building
 
 	buildingIds := scrapeBuildingIds()
@@ -100,7 +102,6 @@ func main() {
 		buildingIds = filteredIds
 	}
 
-	var wg sync.WaitGroup
 	wg.Add(len(buildingIds))
 
 	for _, buildingId := range buildingIds {
