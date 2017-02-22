@@ -76,7 +76,7 @@ func contains(s []string, e string) bool {
 }
 
 func main() {
-	buildingPtr := flag.String("buildings", "", "Building IDs")
+	buildingPtr := flag.String("buildings", "", "Building IDs (leave empty to view all)")
 	verbosePtr := flag.Bool("verbose", false, "Show detailed output")
 	flag.Parse()
 
