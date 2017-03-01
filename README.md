@@ -8,14 +8,14 @@ __Data source__: http://maps.wireless.utoronto.ca/stg/index.php
 
   - Install with Go (assumes you have Go [installed](https://golang.org/doc/install) and [configured](https://golang.org/doc/install#testing)):
 
-    ```sh
+    ```
     $ go get github.com/kshvmdn/uoft-wifi-usage
     $ uoft-wifi-usage -help
     ```
 
   - Build from source (also requires you to have Go installed):
 
-    ```sh
+    ```
     $ git clone https://github.com/kshvmdn/uoft-wifi-usage
     $ cd uoft-wifi-usage
     $ make
@@ -26,7 +26,7 @@ __Data source__: http://maps.wireless.utoronto.ca/stg/index.php
 
   - Run the program with `-help` for the help dialogue.
   
-    ```sh
+    ```
     $ uoft-wifi-usage -help
     Usage of uoft-wifi-usage:
     -buildings string
@@ -37,7 +37,18 @@ __Data source__: http://maps.wireless.utoronto.ca/stg/index.php
 
   - Example:
 
-    ```sh
+    ```
+    $ uoft-wifi-usage | more
+    Astronomy & Astrophysics Building, 10 connections
+    665 Spadina Ave, 9 connections
+    Lash Miller Chemistry Labs, 50 connections
+    Bissell Bldg., 24 connections
+    215 Huron St., 6 connections
+    481 University Ave, 0 connections
+    Rosebrugh Bldg., 31 connections
+    121 St George St, 9 connections
+    Northrop Frye Hall, 6 connections
+    ...
     $ uoft-wifi-usage -buildings=0080
     Bahen Centre for Information Technology, 133 connections
     $ uoft-wifi-usage -buildings="0080,12345" -verbose
