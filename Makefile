@@ -1,7 +1,12 @@
-all: uoft-wifi-usage
+.PHONY: all build lint clean
 
-uoft-wifi-usage:
-	go build -o uoft-wifi-usage main.go
+all: build
+
+build:
+	go build -v -o uoft-wifi-usage main.go
+
+lint:
+	${GOPATH}/bin/golint .
 
 clean:
 	rm uoft-wifi-usage

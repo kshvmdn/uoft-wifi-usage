@@ -11,7 +11,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-const baseUrl string = "http://maps.wireless.utoronto.ca/stg"
+const baseURL string = "http://maps.wireless.utoronto.ca/stg"
 
 type building struct {
 	id                    string
@@ -21,26 +21,26 @@ type building struct {
 	accessPointsAvailable int
 }
 
-func scrapeBuildingIds() []string {
-	var buildingIds []string
+func scrapeBuildingIDs() []string {
+	var buildingIDs []string
 
-	doc, err := goquery.NewDocument(fmt.Sprintf("%s/index.php", baseUrl))
+	doc, err := goquery.NewDocument(fmt.Sprintf("%s/index.php", baseURL))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	doc.Find("area[shape=\"circle\"]").Each(func(_ int, s *goquery.Selection) {
-		buildingId, exists := s.Attr("alt")
+	doc.Find("area[shape=\"circle\"]").Each(func(i int, s *goquery.Selection) {
+		buildingID, exists := s.Attr("alt")
 		if exists {
-			buildingIds = append(buildingIds, buildingId)
+			buildingIDs = append(buildingIDs, buildingID)
 		}
 	})
 
-	return buildingIds
+	return buildingIDs
 }
 
 func scrapeWifiUsage(id string) building {
-	doc, err := goquery.NewDocument(fmt.Sprintf("%s/popUp.php?name=%s", baseUrl, id))
+	doc, err := goquery.NewDocument(fmt.Sprintf("%s/popUp.php?name=%s", baseURL, id))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -84,31 +84,31 @@ func main() {
 	var wg sync.WaitGroup
 	var buildings []building
 
-	buildingIds := scrapeBuildingIds()
+	buildingIDs := scrapeBuildingIDs()
 
 	if *buildingPtr != "" {
 		// Filter inputted building IDs (remove nonexistent IDs)
 		var filteredIds []string
 
-		for _, requestedId := range strings.Split(*buildingPtr, ",") {
-			requestedId = strings.Trim(requestedId, " ")
-			if contains(buildingIds, requestedId) {
-				filteredIds = append(filteredIds, requestedId)
+		for _, requestedID := range strings.Split(*buildingPtr, ",") {
+			requestedID = strings.Trim(requestedID, " ")
+			if contains(buildingIDs, requestedID) {
+				filteredIds = append(filteredIds, requestedID)
 			} else if *verbosePtr {
-				log.Printf("Building with ID `%s` doesn't exist.", requestedId)
+				log.Printf("Building with ID `%s` doesn't exist.", requestedID)
 			}
 		}
 
-		buildingIds = filteredIds
+		buildingIDs = filteredIds
 	}
 
-	wg.Add(len(buildingIds))
+	wg.Add(len(buildingIDs))
 
-	for _, buildingId := range buildingIds {
+	for _, buildingID := range buildingIDs {
 		go func(id string) {
 			defer wg.Done()
 			buildings = append(buildings, scrapeWifiUsage(id))
-		}(buildingId)
+		}(buildingID)
 	}
 
 	wg.Wait()
